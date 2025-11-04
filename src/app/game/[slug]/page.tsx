@@ -7,6 +7,10 @@ interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
+export async function generateStaticParams() {
+    return [];
+}
+
 export async function generateMetadata({ params }: PageProps) {
     const { slug } = await params;
     const { game } = await gameService.getGameBySlug(slug);
@@ -113,7 +117,6 @@ export default async function GameDetailPage({ params }: PageProps) {
                         </div>
                     )}
 
-
                     <div className="flex flex-wrap justify-center items-center gap-2 text-purple-200 text-xs md:text-sm">
                         <span className="bg-purple-800/40 px-2 py-1 rounded">Slug: {game.slug}</span>
                         <span className="bg-purple-800/40 px-2 py-1 rounded">ID: {game.id}</span>
@@ -122,6 +125,7 @@ export default async function GameDetailPage({ params }: PageProps) {
                         </span>
                     </div>
                 </div>
+
                 <div className="grid lg:grid-cols-3 gap-6 mb-6">
                     <div className="lg:col-span-1">
                         <div className="relative group">
@@ -274,6 +278,7 @@ export default async function GameDetailPage({ params }: PageProps) {
                         <p className="text-base">¡Prueba con otro!</p>
                     </div>
                 )}
+
                 <div className="text-center mt-6">
                     <Link
                         href="/"
