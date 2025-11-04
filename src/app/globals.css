@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-
-:root {
-  --bg-gradient: linear-gradient(135deg, #ff9ec1 0%, #f8d8e8 50%, #ffffff 100%);
-  --purple: #ad99dc;
-  --purple-hover: #a89bcd;
-  --pink: #d787af;
-}
-
 body {
   margin: 0;
   padding: 0;

@@ -262,7 +262,7 @@ export default async function GameDetailPage({ params }: PageProps) {
                                         {similarGame.rating && (
                                             <div className="flex items-center gap-1 mt-1">
                                                 <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
-                                                <span className="text-yellow-300 text-xs">
+                                                <span className="text-purple-300 text-xs">
                                                     {similarGame.rating.toFixed(0)}
                                                 </span>
                                             </div>

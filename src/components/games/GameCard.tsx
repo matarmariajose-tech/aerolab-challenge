@@ -61,7 +61,7 @@ export default function GameCard({
           />
 
           {game.rating && (
-            <div className="absolute bottom-1 left-1 bg-yellow-500 text-black text-xs px-1.5 py-0.5 rounded font-bold shadow-sm">
+            <div className="absolute bottom-1 left-1 bg-purple-00 text-black text-xs px-1.5 py-0.5 rounded font-bold shadow-sm">
               {Math.round(game.rating)}%
             </div>
           )}
@@ -131,7 +131,7 @@ export default function GameCard({
         />
 
         {game.rating && (
-          <div className="absolute top-2 left-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-sm font-bold shadow-lg">
+          <div className="absolute top-2 left-2 bg-purple-300 text-black px-2 py-1 rounded-full text-sm font-bold shadow-lg">
             {Math.round(game.rating)}%
           </div>
         )}

@@ -117,7 +117,7 @@ export default function Home() {
         )}
 
         {!isLoading && displayGames.length === 0 && (
-          <div className="text-center py-12 bg-purple-900/30 rounded-2xl border border-purple-700/50 backdrop-blur-sm">
+          <div className="text-center py-12 bg-purple-900/30 rounded-2xl backdrop-blur-sm">
             <div className="text-5xl mb-4">🎮</div>
             <h3 className="text-xl font-bold text-purple-200 mb-2">
               {searchQuery ? 'No games found' : 'No games available'}
@@ -131,20 +131,20 @@ export default function Home() {
         )}
 
         {!isLoading && displayGames.length > 0 && (
-          <div className="bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4 border border-purple-700/50 shadow-xl mb-6">
+          <div className="bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4 shadow-xl mb-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
               <div>
-                <h2 className="text-xl md:text-2xl font-bold text-purple-200">
+                <h2 className="text-xl md:text-2xl font-bold text-violet-100">
                   {searchQuery ? `Search Results` : 'Popular Games'}
                 </h2>
-                <p className="text-purple-300 text-sm">
+                <p className="text-purple text-sm font-bold text-violet-100">
                   {searchQuery
                     ? `Found ${displayGames.length} games`
                     : 'Top rated games'
                   }
                 </p>
               </div>
-              <div className="bg-purple-800/50 px-4 py-2 rounded-full border border-purple-600/50">
+              <div className="bg-purple-800/50 px-4 py-2 rounded-full">
                 <span className="text-purple-200 font-semibold text-sm">
                   {displayGames.length} {displayGames.length === 1 ? 'game' : 'games'}
                 </span>
@@ -164,7 +164,7 @@ export default function Home() {
         )}
 
         {!searchQuery && games.length > 0 && (
-          <div className="bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4 border border-purple-700/50 ">
+          <div className="bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-purple-200">
