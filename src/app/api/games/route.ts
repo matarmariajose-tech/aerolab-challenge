@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
-const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
+const CLIENT_ID = process.env.TWITCH_CLIENT_ID || "31leo3lid47umpcfk0qcibt1vewic2";
+const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET || "t0dqi6zcw73sskovhu9hv05cgdr8em";
 
 let accessToken: string | null = null;
 let tokenExpiry: number = 0;
