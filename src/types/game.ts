@@ -10,6 +10,9 @@ export interface Cover {
 }
 
 export interface Game {
+  genres: boolean;
+  screenshots: boolean;
+  slug: string;
   id: number;
   name: string;
   cover?: Cover;

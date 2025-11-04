@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/components/Header";
 import { useGameStore } from "@/store/useGameStore";
 import { Game } from "@/types/game";
 import { useRouter } from "next/navigation";
@@ -40,7 +39,6 @@ export default function GameClient({ game, slug }: GameClientProps) {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Header />
 
             <main className="container mx-auto px-4 py-8">
                 <nav className="mb-6">
