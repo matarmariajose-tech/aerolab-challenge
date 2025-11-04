@@ -66,7 +66,7 @@ export default function Search({ onSearch }: SearchProps) {
       <input
         ref={inputRef}
         type="text"
-        placeholder="Search for games like The Legend of Zelda, Mario"
+        placeholder="Search for games..."
         value={query}
         onChange={handleChange}
         onFocus={handleFocus}
