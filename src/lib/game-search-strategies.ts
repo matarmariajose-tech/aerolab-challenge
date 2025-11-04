@@ -10,7 +10,7 @@ export class ExactSlugStrategy implements GameSearchStrategy {
 
     async search(slug: string): Promise<Game | null> {
         try {
-            const response = await fetch('http://localhost:3000/api/games', {
+            const response = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'slug', slug })
@@ -41,7 +41,7 @@ export class NameSearchStrategy implements GameSearchStrategy {
         try {
             const name = this.slugToName(slug);
 
-            const response = await fetch('http://localhost:3000/api/games', {
+            const response = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'search', query: name, limit: 1 })
@@ -70,7 +70,7 @@ export class IDSearchStrategy implements GameSearchStrategy {
 
             const gameId = match[1];
 
-            const response = await fetch('http://localhost:3000/api/games', {
+            const response = await fetch('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'details', gameId })
