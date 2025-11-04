@@ -5,7 +5,18 @@ import {
     NameSearchStrategy,
     IDSearchStrategy,
     LocalCacheStrategy
-} from '@/lib/game-search-strategies';
+} from '../lib/game-search-strategies';
+
+const makeServerRequest = async (url: string, options: any) => {
+    const baseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://aerolab-challenge-beryl-six.vercel.app'
+        : 'http://localhost:3000';
+
+    const fullUrl = `${baseUrl}${url}`;
+    console.log(`[Server Fetch] URL: ${fullUrl}`);
+
+    return fetch(fullUrl, options);
+};
 
 export class GameService {
     getGamesByGenre(genreIds: any, id: number, arg2: number): any[] | PromiseLike<any[]> {
@@ -54,23 +65,25 @@ export class GameService {
 
     async getSimilarGames(gameId: number, limit: number = 6): Promise<Game[]> {
         try {
+            console.log(`[GameService] Getting similar games for ID: ${gameId}`);
 
-            const response = await fetch('/api/games', {
+            const response = await makeServerRequest('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     action: 'similar',
-                    gameId,
+                    gameId: gameId.toString(),
                     limit
                 }),
             });
 
             if (response.ok) {
                 const similarGames = await response.json();
-                console.log(`✅ Found ${similarGames?.length || 0} similar games`);
+                console.log(`Found ${similarGames?.length || 0} similar games`);
                 return Array.isArray(similarGames) ? similarGames : [];
             }
 
+            console.log(`Similar games response not OK: ${response.status}`);
             return [];
 
         } catch (error) {

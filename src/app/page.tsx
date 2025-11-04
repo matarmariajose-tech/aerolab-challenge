@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useGameStore } from '@/store/useGameStore';
-import Search from '@/components/Search';
-import GameCard from '@/components/games/GameCard';
-import { Game } from '@/types/game';
+import { useGameStore } from '../store/useGameStore';
+import Search from '../components/Search';
+import GameCard from '../components/games/GameCard';
+import { Game } from '../types/game';
 
 export default function Home() {
   const {

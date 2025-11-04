@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-const CLIENT_ID = process.env.TWITCH_CLIENT_ID || "31leo3lid47umpcfk0qcibt1vewic2";
-const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET || "t0dqi6zcw73sskovhu9hv05cgdr8em";
+const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 
 let accessToken: string | null = null;
 let tokenExpiry: number = 0;
@@ -40,7 +40,7 @@ class IGDBService {
 
         const data = await response.json();
         accessToken = data.access_token;
-        tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // 1 min antes
+        tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000;
         return accessToken!;
     }
 
@@ -168,8 +168,6 @@ class IGDBService {
     }
 
     async getGameBySlug(slug: string) {
-        console.log(`Processing slug: "${slug}"`);
-
         const exactBody = `
             fields name, slug, cover.image_id, first_release_date, rating, platforms.name, summary,
                    screenshots.image_id, similar_games.name, similar_games.slug, 
@@ -189,7 +187,6 @@ class IGDBService {
                     url: `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
                 };
             }
-            console.log(`Found game by exact slug: ${game.name}`);
             return game;
         }
 

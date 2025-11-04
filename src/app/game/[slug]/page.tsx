@@ -1,4 +1,4 @@
-import { gameService } from "@/services/game-service";
+import { gameService } from "../../../services/game-service";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -104,7 +104,7 @@ export default async function GameDetailPage({ params }: PageProps) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-pink-400 to-purple-900 text-white p-3">
+        <div className="min-h-screen bg-gradient-to-br from-d698b7-400 to-d698b7-900 text-white p-3">
             <div className="max-w-6xl mx-auto">
                 <div className="mb-6 text-center bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4 border border-purple-700/50 shadow-2xl">
                     <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-purple-200 to-violet-300 bg-clip-text text-transparent">

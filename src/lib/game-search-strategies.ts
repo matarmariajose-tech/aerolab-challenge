@@ -1,24 +1,19 @@
-import { Game } from '@/types/game';
+import { Game } from '../types/game';
 
 export interface GameSearchStrategy {
     search(identifier: string): Promise<Game | null>;
     getName(): string;
 }
 
-const getBaseUrl = () => {
-    if (typeof window !== 'undefined') {
-        return '';
-    }
+const makeServerRequest = async (url: string, options: any) => {
+    const baseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://aerolab-challenge-beryl-six.vercel.app'
+        : 'http://localhost:3000';
 
-    if (process.env.VERCEL_URL) {
-        return `https://${process.env.VERCEL_URL}`;
-    }
+    const fullUrl = `${baseUrl}${url}`;
+    console.log(`[Server Fetch] URL: ${fullUrl}`);
 
-    if (process.env.NODE_ENV === 'production') {
-        return 'https://aerolab-challenge-beryl-six.vercel.app';
-    }
-
-    return 'http://localhost:3000';
+    return fetch(fullUrl, options);
 };
 
 export class ExactSlugStrategy implements GameSearchStrategy {
@@ -26,12 +21,9 @@ export class ExactSlugStrategy implements GameSearchStrategy {
 
     async search(slug: string): Promise<Game | null> {
         try {
-            const baseUrl = getBaseUrl();
-            const apiUrl = `${baseUrl}/api/games`;
+            console.log(`[ExactSlug] Searching for: ${slug}`);
 
-            console.log(`[ExactSlug] Fetching from: ${apiUrl}`);
-
-            const response = await fetch(apiUrl, {
+            const response = await makeServerRequest('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'slug', slug })
@@ -64,12 +56,9 @@ export class NameSearchStrategy implements GameSearchStrategy {
     async search(slug: string): Promise<Game | null> {
         try {
             const name = this.slugToName(slug);
-            const baseUrl = getBaseUrl();
-            const apiUrl = `${baseUrl}/api/games`;
+            console.log(`[NameSearch] Searching for: ${slug} -> "${name}"`);
 
-            console.log(`[NameSearch] Fetching from: ${apiUrl}`);
-
-            const response = await fetch(apiUrl, {
+            const response = await makeServerRequest('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'search', query: name, limit: 1 })
@@ -100,12 +89,9 @@ export class IDSearchStrategy implements GameSearchStrategy {
             if (!match) return null;
 
             const gameId = match[1];
-            const baseUrl = getBaseUrl();
-            const apiUrl = `${baseUrl}/api/games`;
+            console.log(`[IDSearch] Searching for ID: ${gameId}`);
 
-            console.log(`[IDSearch] Fetching from: ${apiUrl}`);
-
-            const response = await fetch(apiUrl, {
+            const response = await makeServerRequest('/api/games', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'details', gameId })

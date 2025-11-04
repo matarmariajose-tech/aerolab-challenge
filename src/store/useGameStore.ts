@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Game, GameCollection, SearchState } from "@/types/game";
+import { Game, GameCollection, SearchState } from "../types/game";
 
 interface GameState extends GameCollection {
   searchState: SearchState;
