@@ -61,5 +61,3 @@ npm run test:coverage # Run with coverage report
 - **Store**: ~60%
 - **Utilities**: ~90%
 - **Total**: ~65%
-
-- ![Mobile Home](/public/screenshots/4.png)
