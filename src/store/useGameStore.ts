@@ -6,6 +6,7 @@ interface GameState extends GameCollection {
   searchState: SearchState;
   searchQuery: string;
   searchResults: Game[];
+  sortBy: 'dateAdded' | 'releaseDate' | 'name';
 
   searchGames: (query: string) => Promise<void>;
   clearSearch: () => void;
@@ -13,6 +14,8 @@ interface GameState extends GameCollection {
   addGame: (game: Game) => void;
   removeGame: (gameId: number) => void;
   isGameCollected: (gameId: number) => boolean;
+  setSortBy: (sortBy: GameState['sortBy']) => void;
+  getSortedGames: () => Game[];
 }
 
 const searchCache = new Map<string, { games: Game[]; timestamp: number }>();
@@ -25,6 +28,7 @@ export const useGameStore = create<GameState>()(
       searchState: 'idle',
       searchQuery: '',
       searchResults: [],
+      sortBy: 'dateAdded',
 
       searchGames: async (query: string) => {
         const trimmed = query.trim();
@@ -33,7 +37,6 @@ export const useGameStore = create<GameState>()(
           return;
         }
 
-        // Cache check
         const cached = searchCache.get(trimmed);
         if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
           set({
@@ -90,7 +93,11 @@ export const useGameStore = create<GameState>()(
       addGame: (game: Game) => {
         const { games } = get();
         if (!games.some(g => g.id === game.id)) {
-          set({ games: [game, ...games] });
+          const gameWithDate = {
+            ...game,
+            dateAdded: Date.now()
+          };
+          set({ games: [gameWithDate, ...games] });
           searchCache.clear();
         }
       },
@@ -102,11 +109,38 @@ export const useGameStore = create<GameState>()(
       isGameCollected: (gameId: number) => {
         return get().games.some(g => g.id === gameId);
       },
+
+      setSortBy: (sortBy) => set({ sortBy }),
+
+      getSortedGames: () => {
+        const { games, sortBy } = get();
+        const sortedGames = [...games];
+
+        switch (sortBy) {
+          case 'dateAdded':
+            return sortedGames.sort((a, b) =>
+              new Date(b.dateAdded || 0).getTime() - new Date(a.dateAdded || 0).getTime()
+            );
+          case 'releaseDate':
+            return sortedGames.sort((a, b) =>
+              (b.first_release_date || 0) - (a.first_release_date || 0)
+            );
+          case 'name':
+            return sortedGames.sort((a, b) =>
+              a.name.localeCompare(b.name)
+            );
+          default:
+            return sortedGames;
+        }
+      },
     }),
     {
       name: "game-collection",
-      partialize: (state) => ({ games: state.games }),
-      version: 1
+      partialize: (state) => ({
+        games: state.games,
+        sortBy: state.sortBy
+      }),
+      version: 2
     }
   )
 );

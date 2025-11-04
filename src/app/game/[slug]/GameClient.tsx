@@ -91,7 +91,7 @@ export default function GameClient({ game, slug }: GameClientProps) {
                                 <div>
                                     <h3 className="text-sm font-semibold text-gray-500">Status</h3>
                                     <p className={`text-lg font-semibold ${isCollected ? "text-green-600" : "text-gray-600"}`}>
-                                        {isCollected ? "✅ In Collection" : "❌ Not Collected"}
+                                        {isCollected ? "In Collection" : "Not Collected"}
                                     </p>
                                 </div>
                             </div>

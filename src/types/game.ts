@@ -10,6 +10,7 @@ export interface Cover {
 }
 
 export interface Game {
+  dateAdded: number;
   genres: boolean;
   screenshots: boolean;
   slug: string;
@@ -29,3 +30,4 @@ export interface GameCollection {
   isGameCollected: (gameId: number) => boolean;
 }
 
+export type SearchState = 'idle' | 'loading' | 'success' | 'empty' | 'error';

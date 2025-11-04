@@ -100,7 +100,6 @@ class IGDBService {
             return this.getPopularGames(limit);
         }
 
-        // Búsqueda principal SIN sort
         const searchBody = `
         search "${query}";
         fields name, slug, cover.image_id, first_release_date, rating, platforms.name, summary, total_rating_count;
@@ -110,7 +109,6 @@ class IGDBService {
 
         let games = await this.makeIGDBRequest(searchBody, `search:${query}`);
 
-        // Fallback con fuzzy match SIN sort
         if (games.length === 0) {
             const fallbackBody = `
             fields name, slug, cover.image_id, first_release_date, rating, platforms.name, summary, total_rating_count;
@@ -120,7 +118,6 @@ class IGDBService {
             games = await this.makeIGDBRequest(fallbackBody, `fallback:${query}`);
         }
 
-        // Ordenar localmente por total_rating_count
         games.sort((a: any, b: any) => (b.total_rating_count || 0) - (a.total_rating_count || 0));
 
         return games.map((game: any) => ({
@@ -362,7 +359,6 @@ export async function POST(request: Request) {
                 return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }
 
-        console.log(`${action} completed in ${Date.now() - startTime}ms`);
         return NextResponse.json(result);
 
     } catch (error) {

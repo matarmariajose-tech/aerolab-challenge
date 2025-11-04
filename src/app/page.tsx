@@ -7,34 +7,36 @@ import GameCard from '@/components/games/GameCard';
 import { Game } from '@/types/game';
 
 export default function Home() {
-  const { games, searchResults, searchState, searchQuery, clearSearch } = useGameStore();
+  const {
+    games,
+    searchResults,
+    searchState,
+    searchQuery,
+    clearSearch,
+    sortBy,
+    setSortBy,
+    getSortedGames
+  } = useGameStore();
+
   const [displayGames, setDisplayGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [debugInfo, setDebugInfo] = useState('');
 
-  // Función reusable para cargar populares (POST)
   const loadPopularGames = async () => {
     try {
       setIsLoading(true);
       setDebugInfo('Starting to load popular games...');
 
-      console.log('[DEBUG] Fetching popular games...');
       const response = await fetch('/api/games', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'popular', limit: 20 }),
       });
 
-      console.log('[DEBUG] Response status:', response.status);
       setDebugInfo(`Response status: ${response.status}`);
 
       if (response.ok) {
         const popularGames = await response.json();
-        console.log('Popular games received:', popularGames);
-        console.log('Games array?:', Array.isArray(popularGames));
-        console.log('Number of games:', popularGames?.length || 0);
-
-        setDebugInfo(`Received ${popularGames?.length || 0} games`);
 
         if (Array.isArray(popularGames) && popularGames.length > 0) {
           setDisplayGames(popularGames);
@@ -44,25 +46,21 @@ export default function Home() {
         }
       } else {
         const errorText = await response.text();
-        console.error('Response not OK:', response.status, errorText);
         setDebugInfo(`Error ${response.status}: ${errorText}`);
         setDisplayGames([]);
       }
     } catch (error) {
       console.error('Error loading popular games:', error);
-      setDebugInfo(`Fetch error: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setDisplayGames([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Cargar al inicio
   useEffect(() => {
     loadPopularGames();
   }, []);
 
-  // Mostrar resultados de búsqueda
   useEffect(() => {
     console.log('Search state changed:', {
       searchQuery,
@@ -84,86 +82,76 @@ export default function Home() {
     console.log('Clearing search');
     clearSearch();
     setDisplayGames([]);
-    loadPopularGames(); // Recarga populares
+    loadPopularGames();
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        {/* Debug Info - REMOVER DESPUÉS */}
-        <div className="fixed top-4 right-4 bg-yellow-100 border border-yellow-400 p-3 rounded text-sm max-w-xs z-50">
-          <div className="font-semibold">Debug Info:</div>
-          <div>Search Query: "{searchQuery}"</div>
-          <div>Search State: {searchState}</div>
-          <div>Display Games: {displayGames.length}</div>
-          <div>Collection: {games.length}</div>
-          <div className="mt-1 text-xs">{debugInfo}</div>
-        </div>
-
-        {/* Header */}
+    <div className="min-h-screen py-6">
+      <div className="container mx-auto px-3">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-purple-500 to-violet-300 bg-clip-text text-transparent">
             Game Collection
           </h1>
-          <p className="text-gray-600 mb-8">
-            Search and collect your favorite video games
-          </p>
         </div>
 
-        {/* Search */}
-        <div className="max-w-2xl mx-auto mb-12">
+        <div className="max-w-2xl mx-auto mb-8">
           <Search onSearch={(query) => useGameStore.getState().searchGames(query)} />
 
           {searchQuery && (
-            <div className="mt-4 text-center">
+            <div className="mt-3 text-center">
               <button
                 onClick={handleClearSearch}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-purple-200 hover:text-white text-sm px-4 py-2 rounded-lg bg-purple-800/50 hover:bg-purple-700/60 transition-all duration-300 border border-purple-600/50 hover:border-purple-400/50 hover:scale-105"
               >
-                Clear search and show popular games
+                Clear search
               </button>
             </div>
           )}
         </div>
 
-        {/* Loading */}
         {isLoading && (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading games...</p>
+          <div className="text-center py-12 bg-purple-900/30 rounded-2xl border border-purple-700/50 backdrop-blur-sm">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-300 mx-auto mb-3"></div>
+            <p className="text-purple-200">Loading games...</p>
           </div>
         )}
 
-        {/* Empty */}
         {!isLoading && displayGames.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">Gamepad</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <div className="text-center py-12 bg-purple-900/30 rounded-2xl border border-purple-700/50 backdrop-blur-sm">
+            <div className="text-5xl mb-4">🎮</div>
+            <h3 className="text-xl font-bold text-purple-200 mb-2">
               {searchQuery ? 'No games found' : 'No games available'}
             </h3>
-            <p className="text-gray-600">
+            <p className="text-purple-300">
               {searchQuery
-                ? 'Try searching with different keywords'
-                : 'Popular games will appear here'}
+                ? 'Try different keywords'
+                : 'Popular games will appear here soon'}
             </p>
           </div>
         )}
 
-        {/* Games Grid */}
         {!isLoading && displayGames.length > 0 && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {searchQuery ? `Search Results (${displayGames.length})` : 'Popular Games'}
-              </h2>
-              {searchQuery && (
-                <span className="text-sm text-gray-500">
-                  Found {displayGames.length} games
+          <div className="bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4 border border-purple-700/50 shadow-xl mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold text-purple-200">
+                  {searchQuery ? `Search Results` : 'Popular Games'}
+                </h2>
+                <p className="text-purple-300 text-sm">
+                  {searchQuery
+                    ? `Found ${displayGames.length} games`
+                    : 'Top rated games'
+                  }
+                </p>
+              </div>
+              <div className="bg-purple-800/50 px-4 py-2 rounded-full border border-purple-600/50">
+                <span className="text-purple-200 font-semibold text-sm">
+                  {displayGames.length} {displayGames.length === 1 ? 'game' : 'games'}
                 </span>
-              )}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {displayGames.map((game) => (
                 <GameCard
                   key={game.id}
@@ -175,14 +163,42 @@ export default function Home() {
           </div>
         )}
 
-        {/* Collection */}
         {!searchQuery && games.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Your Collection ({games.length})
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {games.map((game) => (
+          <div className="bg-purple-900/30 backdrop-blur-sm rounded-2xl p-4 border border-purple-700/50 ">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold text-purple-200">
+                  Your Collection
+                </h2>
+                <p className="text-purple-300 text-sm">
+                  Your personal game collection
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="relative bg-purple-900/80 text-purple-100 px-4 py-2 rounded-lg border border-purple-600/50 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm transition-all duration-300 hover:bg-purple-800/80"
+                  >
+                    <option value="dateAdded">📅 Date Added</option>
+                    <option value="releaseDate">🎮 Release Date</option>
+                    <option value="name">🔤 Name</option>
+                  </select>
+                </div>
+
+                <div className="bg-gradient-to-r from-violet-600/60 to-purple-600/60 px-4 py-2 rounded-full border border-violet-500/50 backdrop-blur-sm">
+                  <span className="text-violet-100 font-semibold text-sm">
+                    {games.length} {games.length === 1 ? 'game' : 'games'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {getSortedGames().map((game) => (
                 <GameCard
                   key={game.id}
                   game={game}

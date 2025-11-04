@@ -14,7 +14,7 @@ export async function getPopularGames(limit: number = 50): Promise<Game[]> {
 
     return await response.json();
   } catch (error) {
-    console.error('❌ Error fetching popular games:', error);
+    console.error('Error fetching popular games:', error);
     return [];
   }
 }
@@ -35,7 +35,7 @@ export async function searchGames(query: string, limit: number = 50): Promise<Ga
 
     return await response.json();
   } catch (error) {
-    console.error('❌ Search error:', error);
+    console.error('Search error:', error);
     return [];
   }
 }
@@ -52,7 +52,7 @@ export async function getGameDetails(gameId: string): Promise<Game | null> {
 
     return await response.json();
   } catch (error) {
-    console.error('❌ Game details error:', error);
+    console.error('Game details error:', error);
     return null;
   }
 }
@@ -72,7 +72,7 @@ export async function getGameBySlug(slug: string): Promise<Game | null> {
 
     return await response.json();
   } catch (error) {
-    console.error('❌ Game by slug error:', error);
+    console.error('Game by slug error:', error);
     return null;
   }
 }

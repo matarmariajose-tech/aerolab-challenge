@@ -8,6 +8,9 @@ import {
 } from '@/lib/game-search-strategies';
 
 export class GameService {
+    getGamesByGenre(genreIds: any, id: number, arg2: number): any[] | PromiseLike<any[]> {
+        throw new Error("Method not implemented.");
+    }
     private strategies: GameSearchStrategy[];
     private cache = new Map<string, { game: Game | null, timestamp: number }>();
     private readonly CACHE_TTL = 5 * 60 * 1000;
@@ -47,6 +50,33 @@ export class GameService {
 
         this.cache.set(slug, { game: null, timestamp: Date.now() });
         return { game: null, strategy: 'none' };
+    }
+
+    async getSimilarGames(gameId: number, limit: number = 6): Promise<Game[]> {
+        try {
+
+            const response = await fetch('/api/games', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'similar',
+                    gameId,
+                    limit
+                }),
+            });
+
+            if (response.ok) {
+                const similarGames = await response.json();
+                console.log(`✅ Found ${similarGames?.length || 0} similar games`);
+                return Array.isArray(similarGames) ? similarGames : [];
+            }
+
+            return [];
+
+        } catch (error) {
+            console.error('Error fetching similar games:', error);
+            return [];
+        }
     }
 
     clearCache(): void {
