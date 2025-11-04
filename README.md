@@ -1,6 +1,6 @@
 # GameHub - Aerolab Challenge
 
-🚀 **Live Demo**: 
+🚀 **Live Demo**: https://aerolab-challenge-m783p7wrl-maria-jose-s-projects-4d5aca07.vercel.app/
 
 ## Features
 - Search 500,000+ games with Google-like suggestions
