@@ -16,21 +16,31 @@ class IGDBService {
             return accessToken!;
         }
 
+        if (!CLIENT_ID || !CLIENT_SECRET) {
+            throw new Error("Faltan TWITCH_CLIENT_ID o TWITCH_CLIENT_SECRET");
+        }
+
         const response = await fetch("https://id.twitch.tv/oauth2/token", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
                 client_id: CLIENT_ID,
                 client_secret: CLIENT_SECRET,
                 grant_type: "client_credentials",
-            }),
+            }).toString(),
         });
 
-        if (!response.ok) throw new Error(`Token request failed: ${response.status}`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Token request failed:", response.status, errorText);
+            throw new Error(`Token request failed: ${response.status}`);
+        }
 
         const data = await response.json();
         accessToken = data.access_token;
-        tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000;
+        tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // 1 min antes
         return accessToken!;
     }
 
