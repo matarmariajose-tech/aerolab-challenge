@@ -1,4 +1,4 @@
-# GameHub - Aerolab Coding Challenge
+# GameHub
 
 ## 🚀 Live Demo
 **[Production Demo](https://aerolab-challenge-beryl-six.vercel.app/)**
